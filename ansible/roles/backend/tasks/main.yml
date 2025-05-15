@@ -1,0 +1,68 @@
+- name: Install required packages
+  apt:
+    name:
+      - git
+      - curl
+      - unzip
+      - tar
+      - gcc
+      - g++
+      - make
+    state: present
+    update_cache: yes
+
+- name: Clone blog app repo
+  git:
+    repo: https://github.com/cw-barry/blog-app-MERN.git
+    dest: /home/ubuntu/blog-app
+    version: master
+    force: yes
+  become_user: ubuntu
+
+- name: Generate .env from template
+  template:
+    src: .env.j2
+    dest: /home/ubuntu/blog-app/backend/.env
+    owner: ubuntu
+    mode: 0600
+
+- name: Install NVM, Node.js LTS
+  become_user: ubuntu
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    nvm install --lts
+    nvm alias default node
+  args:
+    executable: /bin/bash
+
+- name: Install PM2
+  become_user: ubuntu
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    npm install -g pm2
+  args:
+    executable: /bin/bash
+
+- name: Install backend dependencies
+  become_user: ubuntu
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    cd ~/blog-app/backend
+    npm install
+  args:
+    executable: /bin/bash
+
+- name: Start backend with PM2
+  become_user: ubuntu
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    source $NVM_DIR/nvm.sh
+    cd ~/blog-app/backend
+    pm2 start index.js --name "blog-backend"
+    pm2 save
+  args:
+    executable: /bin/bash

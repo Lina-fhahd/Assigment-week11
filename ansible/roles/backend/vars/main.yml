@@ -1,0 +1,6 @@
+mongodb_uri: "mongodb+srv://lonaa5205:qazqwe123@mern-clarster.cyij9hz.mongodb.net/blog-app?retryWrites=true&w=majority&appName=mern-clarster"
+jwt_secret: "supersecret123"
+jwt_refresh: "refreshsecret456"
+aws_access_key: "YOUR_ACCESS_KEY_ID"
+aws_secret_key: "YOUR_SECRET_ACCESS_KEY"
+s3_bucket: "mern-msdia-bucket-lina"

@@ -1,0 +1,6 @@
+- name: Deploy MERN Backend
+  hosts: backend
+  become: yes
+
+  roles:
+    - backend
